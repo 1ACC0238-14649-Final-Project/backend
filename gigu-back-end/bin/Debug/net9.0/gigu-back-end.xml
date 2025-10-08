@@ -1,0 +1,525 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>gigu-back-end</name>
+    </assembly>
+    <members>
+        <member name="T:gigu_back_end.Briefcases.Domain.Models.Commands.CreateBriefcaseCommand">
+            <summary>
+            Comando para crear un nuevo portafolio (briefcase).
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Domain.Models.Commands.CreateBriefcaseCommand.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Collections.Generic.List{gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand})">
+            <summary>
+            Comando para crear un nuevo portafolio (briefcase).
+            </summary>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand">
+            <summary>
+            Comando que representa un proyecto a ser incluido dentro de un portafolio (briefcase).
+            </summary>
+            <param name="Title">Título del proyecto.</param>
+            <param name="Description">Descripción del proyecto.</param>
+            <param name="Price">Precio estimado del proyecto (por ejemplo, "$250").</param>
+            <param name="Time">Duración estimada del proyecto (por ejemplo, "3 semanas").</param>
+            <param name="GigLink">Enlace al gig asociado o página externa del proyecto.</param>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Comando que representa un proyecto a ser incluido dentro de un portafolio (briefcase).
+            </summary>
+            <param name="Title">Título del proyecto.</param>
+            <param name="Description">Descripción del proyecto.</param>
+            <param name="Price">Precio estimado del proyecto (por ejemplo, "$250").</param>
+            <param name="Time">Duración estimada del proyecto (por ejemplo, "3 semanas").</param>
+            <param name="GigLink">Enlace al gig asociado o página externa del proyecto.</param>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.Title">
+            <summary>Título del proyecto.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.Description">
+            <summary>Descripción del proyecto.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.Price">
+            <summary>Precio estimado del proyecto (por ejemplo, "$250").</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.Time">
+            <summary>Duración estimada del proyecto (por ejemplo, "3 semanas").</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Domain.Models.Commands.ProjectCommand.GigLink">
+            <summary>Enlace al gig asociado o página externa del proyecto.</summary>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Domain.Models.Commands.UpdateBriefcaseCommand">
+            <summary>
+            Comando para actualizar los datos de un portafolio (briefcase) existente.
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Domain.Models.Commands.UpdateBriefcaseCommand.#ctor(System.Int32,System.String,System.String,System.DateTime)">
+            <summary>
+            Comando para actualizar los datos de un portafolio (briefcase) existente.
+            </summary>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Domain.Models.Queries.GetBriefcaseBySellerIdQuery">
+            <summary>
+            Query para obtener un briefcase por el ID del vendedor (SellerId).
+            </summary>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController">
+            <summary>
+            REST Controller for managing briefcases (portfolios).
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.#ctor(gigu_back_end.Briefcases.Domain.Services.IBriefcaseQueryService,gigu_back_end.Briefcases.Domain.Services.IBriefcaseCommandService)">
+            <summary>
+            REST Controller for managing briefcases (portfolios).
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.GetAsync">
+            <summary>
+            Retrieves all briefcases.
+            </summary>
+            <returns>List of all briefcase resources.</returns>
+            <response code="200">Briefcases retrieved successfully.</response>
+            <response code="404">No briefcases found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.GetBySellerId(System.Int32)">
+            <summary>
+            Retrieves a briefcase by seller ID.
+            </summary>
+            <param name="sellerId">The unique identifier of the seller.</param>
+            <returns>The briefcase resource for the specified seller.</returns>
+            <response code="200">Briefcase retrieved successfully.</response>
+            <response code="400">Invalid seller ID.</response>
+            <response code="404">Briefcase not found for the specified seller.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.Post(gigu_back_end.Briefcases.Domain.Models.Commands.CreateBriefcaseCommand)">
+            <summary>
+            Creates a new briefcase.
+            </summary>
+            <param name="command">Briefcase creation command containing all necessary information.</param>
+            <returns>Status indicating the result of the creation.</returns>
+            <response code="201">Briefcase created successfully.</response>
+            <response code="400">Invalid request or project not found.</response>
+            <response code="409">Briefcase with the same name already exists.</response>
+            <response code="422">Validation error.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.Put(System.Int32,gigu_back_end.Briefcases.Domain.Models.Commands.UpdateBriefcaseCommand)">
+            <summary>
+            Updates an existing briefcase.
+            </summary>
+            <param name="id">The unique identifier of the briefcase to update.</param>
+            <param name="command">Updated briefcase information.</param>
+            <returns>Status indicating the result of the update.</returns>
+            <response code="200">Briefcase updated successfully.</response>
+            <response code="400">Invalid briefcase ID.</response>
+            <response code="404">Briefcase not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.BriefcaseController.Delete(System.Int32)">
+            <summary>
+            Deletes a briefcase.
+            </summary>
+            <param name="id">The unique identifier of the briefcase to delete.</param>
+            <returns>No content if deletion was successful.</returns>
+            <response code="204">Briefcase deleted successfully.</response>
+            <response code="400">Invalid briefcase ID.</response>
+            <response code="404">Briefcase not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource">
+            <summary>
+            Recurso que representa un portafolio (briefcase) con sus proyectos relacionados.
+            </summary>
+            <param name="Id">Identificador único del portafolio.</param>
+            <param name="Name">Nombre del portafolio.</param>
+            <param name="Description">Descripción del portafolio.</param>
+            <param name="PublishDate">Fecha de publicación del portafolio.</param>
+            <param name="SellerId">Identificador del vendedor o usuario dueño del portafolio.</param>
+            <param name="Projects">Lista de proyectos contenidos en el portafolio.</param>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.#ctor(System.Int32,System.String,System.String,System.DateTime,System.Int32,System.Collections.Generic.List{gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource})">
+            <summary>
+            Recurso que representa un portafolio (briefcase) con sus proyectos relacionados.
+            </summary>
+            <param name="Id">Identificador único del portafolio.</param>
+            <param name="Name">Nombre del portafolio.</param>
+            <param name="Description">Descripción del portafolio.</param>
+            <param name="PublishDate">Fecha de publicación del portafolio.</param>
+            <param name="SellerId">Identificador del vendedor o usuario dueño del portafolio.</param>
+            <param name="Projects">Lista de proyectos contenidos en el portafolio.</param>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.Id">
+            <summary>Identificador único del portafolio.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.Name">
+            <summary>Nombre del portafolio.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.Description">
+            <summary>Descripción del portafolio.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.PublishDate">
+            <summary>Fecha de publicación del portafolio.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.SellerId">
+            <summary>Identificador del vendedor o usuario dueño del portafolio.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.BriefcaseResource.Projects">
+            <summary>Lista de proyectos contenidos en el portafolio.</summary>
+        </member>
+        <member name="T:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource">
+            <summary>
+            Recurso que representa un proyecto dentro de un portafolio (briefcase).
+            </summary>
+            <param name="Title">Título del proyecto.</param>
+            <param name="Description">Descripción detallada del proyecto.</param>
+            <param name="Price">Precio estimado del proyecto (formato string, por ejemplo: "$100").</param>
+            <param name="Time">Tiempo estimado para completar el proyecto (formato string, por ejemplo: "2 semanas").</param>
+            <param name="GigLink">Enlace al gig o publicación asociada al proyecto.</param>
+        </member>
+        <member name="M:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.#ctor(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Recurso que representa un proyecto dentro de un portafolio (briefcase).
+            </summary>
+            <param name="Title">Título del proyecto.</param>
+            <param name="Description">Descripción detallada del proyecto.</param>
+            <param name="Price">Precio estimado del proyecto (formato string, por ejemplo: "$100").</param>
+            <param name="Time">Tiempo estimado para completar el proyecto (formato string, por ejemplo: "2 semanas").</param>
+            <param name="GigLink">Enlace al gig o publicación asociada al proyecto.</param>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.Title">
+            <summary>Título del proyecto.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.Description">
+            <summary>Descripción detallada del proyecto.</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.Price">
+            <summary>Precio estimado del proyecto (formato string, por ejemplo: "$100").</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.Time">
+            <summary>Tiempo estimado para completar el proyecto (formato string, por ejemplo: "2 semanas").</summary>
+        </member>
+        <member name="P:gigu_back_end.Briefcases.Interfaces.REST.Resources.ProjectResource.GigLink">
+            <summary>Enlace al gig o publicación asociada al proyecto.</summary>
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.BaseRepository`1.AddAsync(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.BaseRepository`1.FindByIdAsync(System.Int32)">
+            <inheritdoc />
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.BaseRepository`1.Update(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.BaseRepository`1.Remove(`0)">
+            <inheritdoc />
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.BaseRepository`1.ListAsync">
+            <inheritdoc />
+        </member>
+        <member name="M:gigu_back_end.Shared.Infraestructure.Persistence.Repositories.UnitOfWork.CompleteAsync">
+            <inheritdoc />
+        </member>
+        <member name="T:gigu_back_end.User.Interfaces.REST.UserController">
+            <summary>
+            REST Controller for managing users.
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.#ctor(gigu_back_end.User.Domain.Services.IUserQueryService,gigu_back_end.User.Domain.Services.IUserCommandService)">
+            <summary>
+            REST Controller for managing users.
+            </summary>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.GetAll">
+            <summary>
+            Retrieves all users.
+            </summary>
+            <returns>List of all user resources.</returns>
+            <response code="200">Users retrieved successfully.</response>
+            <response code="401">Unauthorized access.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.GetById(System.Int32)">
+            <summary>
+            Retrieves a specific user by their ID.
+            </summary>
+            <param name="id">The unique identifier of the user.</param>
+            <returns>The requested user resource.</returns>
+            <response code="200">User retrieved successfully.</response>
+            <response code="401">Unauthorized access.</response>
+            <response code="404">User not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Create(gigu_back_end.Shared.Domain.Models.Commands.CreateUserCommand)">
+            <summary>
+            Creates a new user.
+            </summary>
+            <param name="command">User creation command containing all necessary information.</param>
+            <returns>Status indicating the result of the creation.</returns>
+            <response code="201">User created successfully.</response>
+            <response code="422">Validation error - required fields not completed.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Update(System.Int32,gigu_back_end.Shared.Domain.Models.Commands.UpdateUserCommand)">
+            <summary>
+            Updates an existing user.
+            </summary>
+            <param name="id">The unique identifier of the user to update.</param>
+            <param name="command">Updated user information.</param>
+            <returns>Status indicating the result of the update.</returns>
+            <response code="200">User updated successfully.</response>
+            <response code="400">Bad request or validation error.</response>
+            <response code="404">User not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Delete(System.Int32)">
+            <summary>
+            Deletes a user.
+            </summary>
+            <param name="id">The unique identifier of the user to delete.</param>
+            <returns>No content if deletion was successful.</returns>
+            <response code="204">User deleted successfully.</response>
+            <response code="404">User not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.SignUp(gigu_back_end.Shared.Domain.Models.Commands.SignUpCommand)">
+            <summary>
+            Registers a new user account.
+            </summary>
+            <param name="command">Sign-up command containing user registration information.</param>
+            <returns>Status indicating the result of the registration.</returns>
+            <response code="201">User registered successfully.</response>
+            <response code="409">Email already taken.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Login(gigu_back_end.Shared.Domain.Models.Commands.LoginCommand)">
+            <summary>
+            Authenticates a user and returns a JWT token.
+            </summary>
+            <param name="command">Login command containing user credentials.</param>
+            <returns>JWT token for authenticated user.</returns>
+            <response code="200">Authentication successful, returns JWT token.</response>
+            <response code="401">Invalid credentials.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.GetCurrentUser">
+            <summary>
+            Retrieves the current authenticated user's information.
+            </summary>
+            <returns>Current user's resource information.</returns>
+            <response code="200">Current user retrieved successfully.</response>
+            <response code="401">Unauthorized or invalid token.</response>
+            <response code="404">User not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="T:Chats.Interfaces.REST.ChatController">
+            <summary>
+            REST Controller for managing chat messages between users.
+            </summary>
+        </member>
+        <member name="M:Chats.Interfaces.REST.ChatController.Post(Chats.Domain.Models.Commands.CreateChatCommand)">
+            <summary>
+            Creates a new chat message between two users.
+            </summary>
+            <param name="command">Chat creation command containing senderId, receiverId, and content.</param>
+            <returns>The created chat resource.</returns>
+            <response code="201">Chat created successfully.</response>
+            <response code="400">Validation error.</response>
+            <response code="404">Sender or receiver not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Chats.Interfaces.REST.ChatController.GetChatsByUserId(System.Int32)">
+            <summary>
+            Retrieves all chat messages where the user is either sender or receiver.
+            </summary>
+            <param name="userId">ID of the user.</param>
+            <returns>List of chats involving the user.</returns>
+            <response code="200">Chats retrieved successfully.</response>
+            <response code="404">No chats found.</response>
+        </member>
+        <member name="M:Chats.Interfaces.REST.ChatController.GetConversation(System.Int32,System.Int32)">
+            <summary>
+            Retrieves all chat messages exchanged between two users.
+            </summary>
+            <param name="senderId">ID of the sender user.</param>
+            <param name="receiverId">ID of the receiver user.</param>
+            <returns>List of chats exchanged between the sender and receiver.</returns>
+            <response code="200">Chats retrieved successfully.</response>
+            <response code="404">No conversation found.</response>
+        </member>
+        <member name="T:Gigs.Interfaces.REST.Controllers.GigController">
+            <summary>
+            REST Controller for managing gigs (freelance jobs).
+            </summary>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.CreateGig(Gigs.Interfaces.REST.Resources.CreateGigResource)">
+            <summary>
+            Creates a new gig.
+            </summary>
+            <param name="resource">Gig creation resource containing all necessary information.</param>
+            <returns>The created gig resource.</returns>
+            <response code="201">Gig created successfully.</response>
+            <response code="400">Validation error.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigById(System.Int32)">
+            <summary>
+            Retrieves a specific gig by its ID.
+            </summary>
+            <param name="id">The unique identifier of the gig.</param>
+            <returns>The requested gig resource.</returns>
+            <response code="200">Gig retrieved successfully.</response>
+            <response code="404">Gig not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetAllGigs(System.Int32,System.Int32,System.String,System.Nullable{System.Decimal},System.Nullable{System.Decimal},System.Nullable{System.Int32},System.String,System.Boolean)">
+            <summary>
+            Retrieves all gigs with filtering and pagination support.
+            </summary>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Number of items per page (default: 10).</param>
+            <param name="searchTerm">Search term for filtering by title or description.</param>
+            <param name="minPrice">Minimum price filter.</param>
+            <param name="maxPrice">Maximum price filter.</param>
+            <param name="maxDeliveryDays">Maximum delivery days filter.</param>
+            <param name="sortBy">Field to sort by (default: createdAt).</param>
+            <param name="descending">Sort in descending order (default: true).</param>
+            <returns>Paginated list of gig resources.</returns>
+            <response code="200">Gigs retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigsBySellerId(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Retrieves all gigs for a specific seller.
+            </summary>
+            <param name="sellerId">The unique identifier of the seller.</param>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Number of items per page (default: 10).</param>
+            <returns>Paginated list of gigs for the specified seller.</returns>
+            <response code="200">Seller's gigs retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigsByCategory(System.String,System.Int32,System.Int32,System.Nullable{System.Boolean})">
+            <summary>
+            Retrieves all gigs for a specific category.
+            </summary>
+            <param name="category">The category name.</param>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Number of items per page (default: 10).</param>
+            <param name="isResponsive">Filter for responsive gigs.</param>
+            <returns>Paginated list of gigs in the specified category.</returns>
+            <response code="200">Category gigs retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigsByTags(System.Collections.Generic.List{System.String},System.Int32,System.Int32)">
+            <summary>
+            Retrieves all gigs that match the specified tags.
+            </summary>
+            <param name="tags">List of tags to filter by.</param>
+            <param name="page">Page number (default: 1).</param>
+            <param name="pageSize">Number of items per page (default: 10).</param>
+            <returns>Paginated list of gigs matching the specified tags.</returns>
+            <response code="200">Tagged gigs retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.UpdateGig(System.Int32,Gigs.Interfaces.REST.Resources.UpdateGigResource)">
+            <summary>
+            Updates an existing gig.
+            </summary>
+            <param name="id">The unique identifier of the gig to update.</param>
+            <param name="resource">Updated gig information.</param>
+            <returns>The updated gig resource.</returns>
+            <response code="200">Gig updated successfully.</response>
+            <response code="400">Validation error.</response>
+            <response code="404">Gig not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.DeleteGig(System.Int32,System.Int32)">
+            <summary>
+            Deletes a gig.
+            </summary>
+            <param name="id">The unique identifier of the gig to delete.</param>
+            <param name="sellerId">The seller ID for validation.</param>
+            <returns>No content if deletion was successful.</returns>
+            <response code="204">Gig deleted successfully.</response>
+            <response code="400">Validation error.</response>
+            <response code="404">Gig not found.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigCountByCategory(System.String)">
+            <summary>
+            Retrieves the total count of gigs in a specific category.
+            </summary>
+            <param name="category">The category name.</param>
+            <returns>The total count of gigs in the category.</returns>
+            <response code="200">Count retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GetGigCountBySellerId(System.Int32)">
+            <summary>
+            Retrieves the total count of gigs for a specific seller.
+            </summary>
+            <param name="sellerId">The unique identifier of the seller.</param>
+            <returns>The total count of gigs for the seller.</returns>
+            <response code="200">Count retrieved successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.Controllers.GigController.GigExists(System.Int32)">
+            <summary>
+            Checks if a gig exists.
+            </summary>
+            <param name="id">The unique identifier of the gig.</param>
+            <returns>True if the gig exists, false otherwise.</returns>
+            <response code="200">Existence check completed successfully.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.GetAll">
+            <summary>
+            Obtiene todos los Pulls disponibles.
+            </summary>
+            <returns>Lista de Pulls.</returns>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.GetById(System.Int32)">
+            <summary>
+            Obtiene un Pull por su ID.
+            </summary>
+            <param name="id">ID del Pull</param>
+            <returns>Un Pull si existe.</returns>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.GetByRole(System.String,System.Int32)">
+            <summary>
+            Obtiene Pulls filtrados por rol (seller o buyer) e ID de usuario.
+            </summary>
+            <param name="role">Rol: 'seller' o 'buyer'</param>
+            <param name="userId">ID del usuario correspondiente</param>
+            <returns>Lista de Pulls según el filtro.</returns>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.Create(Gigs.Interfaces.REST.Resources.CreatePullResource)">
+            <summary>
+            Crea un nuevo Pull.
+            </summary>
+            <param name="resource">Datos para crear el Pull</param>
+            <returns>Pull creado</returns>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.Update(System.Int32,Gigs.Interfaces.REST.PullController.UpdatePullRequest)">
+            <summary>
+            Actualiza el precio o estado de un Pull.
+            </summary>
+            <param name="id">ID del Pull</param>
+            <param name="request">Nuevos valores</param>
+        </member>
+        <member name="M:Gigs.Interfaces.REST.PullController.Close(System.Int32)">
+            <summary>
+            Cierra un Pull cambiando su estado a 'complete'.
+            </summary>
+            <param name="id">ID del Pull</param>
+        </member>
+        <member name="T:Gigs.Interfaces.REST.PullController.UpdatePullRequest">
+            <summary>
+            Payload para actualizar Pull.
+            </summary>
+        </member>
+    </members>
+</doc>
