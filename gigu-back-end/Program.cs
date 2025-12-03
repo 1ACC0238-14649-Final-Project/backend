@@ -73,6 +73,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddScoped<IHashService, HashService>();
 builder.Services.AddScoped<IJwtEncryptService, JwtEncryptService>();
+builder.Services.AddScoped<IGoogleTokenValidationService, GoogleTokenValidationService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserQueryService, UserQueryService>();

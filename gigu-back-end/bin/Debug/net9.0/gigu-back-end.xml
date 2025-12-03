@@ -263,16 +263,27 @@
             <response code="500">Internal server error.</response>
         </member>
         <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Update(System.Int32,gigu_back_end.Shared.Domain.Models.Commands.UpdateUserCommand)">
-            <summary>
-            Updates an existing user.
-            </summary>
-            <param name="id">The unique identifier of the user to update.</param>
-            <param name="command">Updated user information.</param>
-            <returns>Status indicating the result of the update.</returns>
-            <response code="200">User updated successfully.</response>
-            <response code="400">Bad request or validation error.</response>
-            <response code="404">User not found.</response>
-            <response code="500">Internal server error.</response>
+             <summary>
+             Updates a user's basic information (Name, Lastname, Email).
+             </summary>
+             <param name="id">The ID of the user to update.</param>
+             <param name="command">The updated user information.</param>
+             <returns>Status indicating the result of the update.</returns>
+             <remarks>
+             Sample request:
+            
+                 PUT /api/v1/user/3
+                 {
+                     "name": "John",
+                     "lastname": "Doe",
+                     "email": "john.doe@example.com"
+                 }
+            
+             </remarks>
+             <response code="200">User updated successfully.</response>
+             <response code="400">Bad request due to invalid input.</response>
+             <response code="404">User not found.</response>
+             <response code="500">Internal server error.</response>
         </member>
         <member name="M:gigu_back_end.User.Interfaces.REST.UserController.Delete(System.Int32)">
             <summary>
@@ -302,6 +313,16 @@
             <returns>JWT token for authenticated user.</returns>
             <response code="200">Authentication successful, returns JWT token.</response>
             <response code="401">Invalid credentials.</response>
+            <response code="500">Internal server error.</response>
+        </member>
+        <member name="M:gigu_back_end.User.Interfaces.REST.UserController.GoogleLogin(gigu_back_end.User.Domain.Models.Commands.GoogleLoginCommand)">
+            <summary>
+            Authenticates a user with Google Sign-In and returns a JWT token.
+            </summary>
+            <param name="command">Google login command containing Google ID token and user information.</param>
+            <returns>JWT token for authenticated user.</returns>
+            <response code="200">Authentication successful, returns JWT token.</response>
+            <response code="401">Invalid Google credentials.</response>
             <response code="500">Internal server error.</response>
         </member>
         <member name="M:gigu_back_end.User.Interfaces.REST.UserController.GetCurrentUser">

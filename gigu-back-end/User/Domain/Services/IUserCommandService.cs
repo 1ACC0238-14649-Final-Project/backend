@@ -11,4 +11,5 @@ public interface IUserCommandService
     Task<bool> Handle(UpdateUserCommand command, int id); 
     Task<Models.Entities.User> Handle(SignUpCommand command);
     Task<string> Handle(LoginCommand loginCommand);
+    Task<string> Handle(GoogleLoginCommand command);
 }

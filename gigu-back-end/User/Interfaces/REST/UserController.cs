@@ -213,6 +213,36 @@ public class UserController(IUserQueryService userQueryService, IUserCommandServ
     }
     
     /// <summary>
+    /// Authenticates a user with Google Sign-In and returns a JWT token.
+    /// </summary>
+    /// <param name="command">Google login command containing Google ID token and user information.</param>
+    /// <returns>JWT token for authenticated user.</returns>
+    /// <response code="200">Authentication successful, returns JWT token.</response>
+    /// <response code="401">Invalid Google credentials.</response>
+    /// <response code="500">Internal server error.</response>
+    [HttpPost("google-login")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginCommand command)
+    {
+        try
+        {
+            var jwToken = await _userCommandService.Handle(command);
+            return Ok(jwToken);
+        }
+        catch (InvalidCredentialsException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An unexpected error occurred", detail = ex.Message });
+        }
+    }
+    
+    /// <summary>
     /// Retrieves the current authenticated user's information.
     /// </summary>
     /// <returns>Current user's resource information.</returns>

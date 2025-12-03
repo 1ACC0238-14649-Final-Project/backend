@@ -17,7 +17,8 @@ namespace gigu_back_end.User.Application.CommandServices
         IUnitOfWork unitOfWork,
         IValidator<CreateUserCommand> validator, 
         IHashService hashService,
-        IJwtEncryptService jwtEncryptService) : IUserCommandService
+        IJwtEncryptService jwtEncryptService,
+        IGoogleTokenValidationService googleTokenValidationService) : IUserCommandService
     {
         public async Task<Domain.Models.Entities.User> Handle(CreateUserCommand command)
         {
@@ -98,6 +99,77 @@ namespace gigu_back_end.User.Application.CommandServices
             var jwtToken = jwtEncryptService.Encrypt(user);
 
 
+            return jwtToken;
+        }
+
+        public async Task<string> Handle(GoogleLoginCommand command)
+        {
+            if (string.IsNullOrWhiteSpace(command.IdToken))
+                throw new InvalidCredentialsException("Google ID token is required");
+
+            // Validar el token de Google
+            var validationResult = await googleTokenValidationService.ValidateTokenAsync(command.IdToken);
+            
+            if (!validationResult.IsValid)
+                throw new InvalidCredentialsException(validationResult.ErrorMessage ?? "Invalid Google token");
+
+            // Usar email del token validado (más seguro) o del comando como fallback
+            var email = validationResult.Email ?? command.Email;
+            if (string.IsNullOrWhiteSpace(email))
+                throw new InvalidCredentialsException("Email is required for Google login");
+
+            // Usar información del token validado o del comando como fallback
+            var name = validationResult.Name ?? command.Name;
+            var image = validationResult.ImageUrl ?? command.Image;
+
+            // Buscar usuario existente por email
+            var user = await userRepository.GetByEmailAsync(email);
+
+            if (user == null)
+            {
+                // Usuario no existe, crear uno nuevo
+                // Separar name en Name y Lastname si es necesario
+                var nameParts = name?.Split(' ', 2) ?? new[] { "", "" };
+                var firstName = nameParts[0] ?? "";
+                var lastName = nameParts.Length > 1 ? nameParts[1] : "";
+
+                // Crear usuario sin password (autenticado por Google)
+                // Generar una contraseña aleatoria que nunca se usará
+                var randomPassword = Guid.NewGuid().ToString();
+                
+                user = new Domain.Models.Entities.User
+                {
+                    Email = email,
+                    Password = hashService.HashPassword(randomPassword), // Password dummy, nunca se usará
+                    Role = "buyer", // Rol por defecto para usuarios de Google
+                    Name = firstName,
+                    Lastname = lastName,
+                    Image = image ?? "",
+                    IsActive = true
+                };
+
+                await userRepository.AddAsync(user);
+                await unitOfWork.CompleteAsync();
+            }
+            else
+            {
+                // Usuario existe, actualizar información si es necesario
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var nameParts = name.Split(' ', 2);
+                    user.Name = nameParts[0] ?? user.Name;
+                    if (nameParts.Length > 1)
+                        user.Lastname = nameParts[1];
+                }
+                if (!string.IsNullOrWhiteSpace(image))
+                    user.Image = image;
+
+                userRepository.Update(user);
+                await unitOfWork.CompleteAsync();
+            }
+
+            // Generar y retornar JWT token
+            var jwtToken = jwtEncryptService.Encrypt(user);
             return jwtToken;
         }
     }
